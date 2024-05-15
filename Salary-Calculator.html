@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Salary Deduction Calculator 2024 - Ontario, Canada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            width: 100%;
+            max-width: 150px;
+            font-weight: bold;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        input[type="number"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .pay-period {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        .output h3 {
+            margin-top: 0;
+        }
+
+        .output p {
+            margin: 5px 0;
+        }
+
+        .rates-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    margin-top: 20px;
+    text-align: left; /* Align text left */
+}
+
+        .rates-container.active {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .rates-content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 600px; /* Set a fixed height for the container */
+}
+
+        .toggle-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.show-rates-toggle {
+    display: inline-block;
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: color 0.3s;
+    margin-right: 5px;
+    margin-bottom: 10px; /* Added margin-bottom */
+    vertical-align: middle;
+}
+
+.show-rates-toggle:hover {
+    color: #0056b3;
+}
+
+.show-rates-label {
+    display: inline-block; /* Display as inline-block */
+    vertical-align: middle; /* Align vertically in the middle */
+    font-size: 14px;
+    margin-left: 5px;
+    margin-bottom: 10px; /* Added margin-bottom */
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f4f4f4;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Salary Deduction Calculator 2024 - Ontario </h1>
+        <form id="salaryForm">
+            <div class="pay-period">
+                <label for="annualSalary">Annual Salary (CAD):</label>
+                <input type="number" id="annualSalary" required>
+            </div>
+
+            <div class="pay-period">
+                <label for="payPeriod">Pay Period:</label>
+                <select id="payPeriod">
+                    <option value="annual">Annual</option>
+                    <option value="biweekly">Biweekly</option>
+                    <option value="semimonthly">Semi-Monthly</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="calculateSalary()">Calculate Salary</button>
+        </form>
+
+        <div class="output" id="results">
+            <!-- Results will be displayed here -->
+        </div>
+
+        <div class="toggle-container">
+            <div>
+                <div class="show-rates-toggle" id="toggleRatesButton" onclick="toggleRates()">+</div>
+                <div class="show-rates-label">Show Rates</div>
+            </div>
+        </div>
+
+        <div class="rates-container" id="ratesContainer">
+            <div class="rates-content">
+                <h3>Tax Rates and Contributions</h3>
+                <p><strong>Federal Tax Rates:</strong></p>
+                <p>- 15% on the portion of taxable income that is $49,020 or less</p>
+                <p>- 20.5% on the portion of taxable income over $49,020 up to $98,040</p>
+                <p>- 26% on the portion of taxable income over $98,040 up to $150,000</p>
+                <p>- 33% on any taxable income exceeding $150,000</p>
+                <p><strong>Ontario Tax Rates:</strong></p>
+                <p>- 5.06% on the portion of taxable income that is $47,937 or less</p>
+                <p>- 7.7% on the portion of taxable income over $47,937 up to $95,875</p>
+                <p>- 10.5% on the portion of taxable income over $95,875 up to $110,076</p>
+                <p>- 12.29% on the portion of taxable income over $110,076 up to $150,000</p>
+                <p>- 13.16% between $150,000 and $220,000</p>
+                <p>- 13.16% + High-income Surtax on any taxable income exceeding $220,000 (the surtax increases the effective tax rate to 20.53%)</p>
+                <p><strong>CPP (Canada Pension Plan) Contributions:</strong></p>
+                <p>- Employee Contribution Rate: 5.95% on earnings up to $68,500</p>
+                <p>- Employee Contribution Rate: 4.00% on earnings between $68,500 and $73,200 (for 2024)</p>
+                <p>- Employer Contribution Rate: Matches employee contributions for both tiers</p>
+                <p><strong>Employment Insurance (EI) Premiums:</strong></p>
+                <p>- Employee Contribution Rate: 1.66% on earnings up to $63,200</p>
+                <p>- Employer Contribution Rate: Approximately 2.326% (1.4 times the employee contribution rate)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateSalary() {
+            const annualSalary = parseFloat(document.getElementById('annualSalary').value);
+            const payPeriod = document.getElementById('payPeriod').value;
+
+            if (isNaN(annualSalary)) {
+                alert('Please enter a valid number for the annual salary.');
+                return;
+            }
+
+            let grossSalary = 0;
+            if (payPeriod === 'biweekly') {
+                grossSalary = annualSalary / 26;
+            } else if (payPeriod === 'semimonthly') {
+                grossSalary = annualSalary / 24;
+            } else {
+                grossSalary = annualSalary;
+            }
+
+            const federalTax = calculateFederalTax(grossSalary);
+            const provincialTax = calculateProvincialTax(grossSalary);
+            const cpp = calculateCPP(grossSalary);
+            const ei = calculateEI(grossSalary);
+
+            const totalDeductions = federalTax + provincialTax + cpp + ei;
+            const netSalary = grossSalary - totalDeductions;
+
+            displayResults(federalTax, provincialTax, cpp, ei, totalDeductions, netSalary);
+        }
+
+        function calculateFederalTax(income) {
+            if (income <= 49020) {
+                return income * 0.15;
+            } else if (income <= 98040) {
+                return 7353 + (income - 49020) * 0.205;
+            } else if (income <= 150000) {
+                return 17229 + (income - 98040) * 0.26;
+            } else {
+                return 31114 + (income - 150000) * 0.33;
+            }
+        }
+
+        function calculateProvincialTax(income) {
+            if (income <= 47937) {
+                return income * 0.0506;
+            } else if (income <= 95875) {
+                return 2424 + (income - 47937) * 0.077;
+            } else if (income <= 110076) {
+                return 5735 + (income - 95875) * 0.105;
+            } else if (income <= 150000) {
+                return 7573 + (income - 110076) * 0.1229;
+            } else if (income <= 220000) {
+                return 13520 + (income - 150000) * 0.1316;
+            } else {
+                return 29092 + (income - 220000) * 0.2053;
+            }
+        }
+
+        function calculateCPP(income) {
+            let cpp1 = Math.min(income, 68500) * 0.0595;
+            let cpp2 = 0;
+            if (income > 68500 && income <= 73200) {
+                cpp2 = (income - 68500) * 0.04;
+            } else if (income > 73200) {
+                cpp2 = (73200 - 68500) * 0.04;
+            }
+            return cpp1 + cpp2;
+        }
+
+        function calculateEI(income) {
+            return Math.min(income, 63200) * 0.0166;
+        }
+
+        function displayResults(federalTax, provincialTax, cpp, ei, totalDeductions, netSalary) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <h3>Calculation Results:</h3>
+                <p>Federal Tax: $${federalTax.toFixed(2)}</p>
+                <p>Provincial Tax: $${provincialTax.toFixed(2)}</p>
+                <p>CPP Contributions: $${cpp.toFixed(2)}</p>
+                <p>EI Premiums: $${ei.toFixed(2)}</p>
+                <p>Total Deductions: $${totalDeductions.toFixed(2)}</p>
+                <p>Net Salary: $${netSalary.toFixed(2)}</p>
+            `;
+        }
+
+        function toggleRates() {
+            const ratesContainer = document.getElementById('ratesContainer');
+            const toggleRatesButton = document.getElementById('toggleRatesButton');
+            ratesContainer.classList.toggle('active');
+            toggleRatesButton.textContent = ratesContainer.classList.contains('active') ? '-' : '+';
+        }
+    </script>
+
+        <footer>
+            &copy; 2024 ManuSreeraj.com. All rights reserved.
+        </footer>
+</body>
+</html>
